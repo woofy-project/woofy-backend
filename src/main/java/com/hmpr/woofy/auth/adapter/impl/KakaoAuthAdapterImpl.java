@@ -66,7 +66,7 @@ public class KakaoAuthAdapterImpl implements KakaoAuthAdapter {
      * @return 카카오아이디 값
      */
     @Override
-    public KakaoIdResponse getUserId(String accessToken) {
+    public KakaoIdResponse getKakaoUserId(String accessToken) {
         String profileUrl = "https://kapi.kakao.com/v2/user/me";
 
         HttpHeaders headers = new HttpHeaders();

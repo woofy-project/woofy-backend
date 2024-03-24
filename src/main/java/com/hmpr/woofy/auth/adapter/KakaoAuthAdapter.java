@@ -7,6 +7,6 @@ public interface KakaoAuthAdapter {
 
     KakaoTokenResponse getToken(String code);
 
-    KakaoIdResponse getUserId(String accessToken);
+    KakaoIdResponse getKakaoUserId(String accessToken);
 
 }

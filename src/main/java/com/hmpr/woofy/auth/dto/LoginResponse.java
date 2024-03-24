@@ -7,6 +7,8 @@ import lombok.Setter;
 @Setter
 public class LoginResponse {
 
+    private Long userId;
+
     private int status;
 
     private String message;
