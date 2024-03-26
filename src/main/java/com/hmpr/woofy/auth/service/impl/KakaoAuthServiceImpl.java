@@ -47,38 +47,63 @@ public class KakaoAuthServiceImpl implements KakaoAuthService {
      * 기존 회원인 경우와 회원가입이 필요한 경우를 분류
      *
      * @param accessToken 카카오서버로부터 받은 토큰
-     * @return 기존 회원인 경우 existingMember = true
+     * @return 기존회원인 경우 로그인 폼 / 아닌경우
      */
     @Override
     public LoginResponse kakaoLogin(String accessToken) {
         KakaoIdResponse kakaoIdResponse = kakaoAuthAdapter.getKakaoUserId(accessToken);
-
         Optional<KakaoAuth> kakaoAuthOptional = kakaoAuthRepository.findByKakaoId(kakaoIdResponse.getKakaoId());
-        LoginResponse loginResponse = new LoginResponse();
 
         if (kakaoAuthOptional.isPresent()) {
-            KakaoAuth kakaoAuth = kakaoAuthOptional.get();
-            User user = kakaoAuth.getUser();
-            Long userId = user.getUserId();
-            loginResponse.setUserId(userId);
-            loginResponse.setStatus(200);
-            loginResponse.setMessage("로그인 성공");
-            loginResponse.setExistingMember(true);
+            return successLogin(kakaoAuthOptional.get());
         } else {
-            User newUser = new User();
-            User savedUser = userRepository.save(newUser);
-            System.out.println(newUser.getUserId());
-            KakaoAuth newKakaoAuth = new KakaoAuth();
-            newKakaoAuth.setKakaoId(kakaoIdResponse.getKakaoId());
-            newKakaoAuth.setUser(savedUser);
-            System.out.println(kakaoIdResponse.getKakaoId());
-            kakaoAuthRepository.save(newKakaoAuth);
-            Long userId = savedUser.getUserId();
-            loginResponse.setUserId(userId);
-            loginResponse.setStatus(200);
-            loginResponse.setMessage("회원가입 필요");
-            loginResponse.setExistingMember(false);
+            return registerNewUser(kakaoIdResponse);
         }
-        return loginResponse;
+    }
+
+    /**
+     * 카카오 로그인 성공 후 유저 아이디 반환
+     *
+     * @param kakaoAuth 카카오 아이디를 가져오고 유저아이디와 매칭
+     * @return 매칭된 유저아이디
+     */
+    private LoginResponse successLogin(KakaoAuth kakaoAuth) {
+        User loginUser = kakaoAuth.getUser();
+        Long userId = loginUser.getUserId();
+        return buildLoginResponse(userId, "로그인 성공", true);
+    }
+
+    /**
+     * 카카오 로그인 이후 새로운 회원일 경우 회원가입 요청
+     *
+     * @param kakaoIdResponse 카카오서버로부터 받은 카카오아이디
+     * @return 새로운 유저아이디만 저장 후 회원가입 요청 메세지
+     */
+    private LoginResponse registerNewUser(KakaoIdResponse kakaoIdResponse) {
+        User newUser = new User();
+        User savedUser = userRepository.save(newUser);
+
+        KakaoAuth newKakaoAuth = new KakaoAuth();
+        newKakaoAuth.setKakaoId(kakaoIdResponse.getKakaoId());
+        newKakaoAuth.setUser(savedUser);
+        kakaoAuthRepository.save(newKakaoAuth);
+
+        return buildLoginResponse(savedUser.getUserId(), "회원가입 필요", false);
+    }
+
+    /**
+     * 응답 빌더
+     * @param userId 유저아이디
+     * @param message 메세지
+     * @param existingMember 회원가입필요 여부
+     * @return 빌더된 응답
+     */
+    private LoginResponse buildLoginResponse(Long userId, String message, boolean existingMember) {
+        return LoginResponse.builder()
+                .userId(userId)
+                .status(200)
+                .message(message)
+                .existingMember(existingMember)
+                .build();
     }
 }
