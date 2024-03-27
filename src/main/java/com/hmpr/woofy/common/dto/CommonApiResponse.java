@@ -1,10 +1,12 @@
 package com.hmpr.woofy.common.dto;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommonApiResponse<T> {
 
@@ -28,10 +30,9 @@ public class CommonApiResponse<T> {
         return new CommonApiResponse<>(ERROR_STATUS, message, null);
     }
 
-    private CommonApiResponse(String status, String message, T data) {
+    public CommonApiResponse(String status, String message, T data) {
         this.status = status;
         this.message = message;
         this.data = data;
-
     }
 }
