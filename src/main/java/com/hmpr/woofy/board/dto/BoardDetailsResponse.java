@@ -1,31 +1,33 @@
 package com.hmpr.woofy.board.dto;
 
 import com.hmpr.woofy.board.entity.Comment;
+import com.hmpr.woofy.board.entity.Location;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
+@Builder
 @Getter
 @Setter
 public class BoardDetailsResponse {
 
-    private Long board_id;
+    private Long boardId;
 
     private String title;
 
-    private String userName;
+    private String nickName;
 
     private String categoryName;
 
-    private String location;
+    private LocationResponseDto location;
 
-    private LocalDate deadlineDate;
+    private LocalDateTime registrationDate;
 
-    private LocalDate registrationDate;
-
-    private LocalDate executionDate;
+    private LocalDate meetingDate;
 
     private String contactEmail;
 

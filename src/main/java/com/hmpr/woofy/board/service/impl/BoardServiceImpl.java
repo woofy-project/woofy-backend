@@ -2,12 +2,15 @@ package com.hmpr.woofy.board.service.impl;
 
 import com.hmpr.woofy.board.dto.BoardDetailsResponse;
 import com.hmpr.woofy.board.dto.LocationRequestDto;
+import com.hmpr.woofy.board.dto.LocationResponseDto;
 import com.hmpr.woofy.board.dto.RegisterBoardRequestDto;
-import com.hmpr.woofy.board.entity.Board;
-import com.hmpr.woofy.board.entity.Location;
+import com.hmpr.woofy.board.entity.*;
+import com.hmpr.woofy.board.exception.BoardNotFoundException;
 import com.hmpr.woofy.board.repository.BoardRepository;
 import com.hmpr.woofy.board.repository.LocationRepository;
 import com.hmpr.woofy.board.service.BoardService;
+import com.hmpr.woofy.user.entity.QUser;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +31,47 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardDetailsResponse getBoardDetails(Long boardId) {
-        return null;
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new BoardNotFoundException("게시판을 찾을 수 없습니다. ID: " + boardId));
+
+        QBoard qBoard = QBoard.board;
+        QUser qUser = QUser.user;
+        QCategory qCategory = QCategory.category;
+        QLocation qLocation = QLocation.location;
+
+        Tuple result = queryFactory
+                .select(qBoard, qUser.nickname, qCategory.categoryName)
+                .from(qBoard)
+                .join(qUser).on(qBoard.userId.eq(qUser.userId))
+                .join(qCategory).on(qBoard.categoryId.eq(qCategory.categoryId))
+                .join(qLocation).on(qBoard.locationId.eq(qLocation.locationId))
+                .where(qBoard.boardId.eq(boardId))
+                .fetchOne();
+
+        BoardDetailsResponse boardDetailsResponse = mapToBoardDetailsResponse(result, boardId);
+
+        return boardDetailsResponse;
+    }
+
+    private BoardDetailsResponse mapToBoardDetailsResponse(Tuple result, Long boardId) {
+        Board board = result.get(QBoard.board);
+        String nickname = result.get(QUser.user.nickname);
+        String categoryName = result.get(QCategory.category.categoryName);
+        LocationResponseDto locationResponseDto = LocationResponseDto.builder()
+                .streetAddress(result.get(QLocation.location.streetAddress))
+                .detail(result.get(QLocation.location.detail))
+                .build();
+
+        return BoardDetailsResponse.builder()
+                .boardId(boardId)
+                .title(board.getTitle())
+                .nickName(nickname)
+                .categoryName(categoryName)
+                .location(locationResponseDto)
+                .registrationDate(board.getRegistrationDate())
+                .meetingDate(board.getMeetingDate())
+                .contactEmail(board.getContactEmail())
+                .build();
     }
 
     @Override
@@ -61,7 +104,7 @@ public class BoardServiceImpl implements BoardService {
 
         Location savedLocation = locationRepository.save(location);
 
-        return savedLocation.getId();
+        return savedLocation.getLocationId();
     }
 
 }
