@@ -107,4 +107,11 @@ public class BoardServiceImpl implements BoardService {
         return savedLocation.getLocationId();
     }
 
+    @Override
+    public void deleteBoard(Long boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new BoardNotFoundException("게시판을 찾을 수 없습니다. ID: " + boardId));
+        boardRepository.delete(board);
+    }
+
 }

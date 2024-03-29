@@ -9,4 +9,6 @@ public interface BoardService {
 
     void registerBoard(RegisterBoardRequestDto requestDto);
 
+    void deleteBoard(Long boardId);
+
 }

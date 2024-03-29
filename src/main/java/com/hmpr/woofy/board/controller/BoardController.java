@@ -30,8 +30,6 @@ public class BoardController {
         }
     }
 
-
-
     @PostMapping("/register")
     public ResponseEntity<CommonApiResponse> registerBoard(@RequestBody RegisterBoardRequestDto requestDto) {
         try {
@@ -40,6 +38,18 @@ public class BoardController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(CommonApiResponse.createError("게시판 등록 오류"));
+        }
+    }
+
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<CommonApiResponse> deleteBoard(@PathVariable Long boardId) {
+        try {
+            boardService.deleteBoard(boardId);
+            return ResponseEntity.ok(CommonApiResponse.createSuccess("게시판이 성공적으로 삭제되었습니다."));
+        } catch (BoardNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(CommonApiResponse.createError("게시판을 찾을 수 없습니다."));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(CommonApiResponse.createError("게시판 삭제 중 오류가 발생했습니다."));
         }
     }
 }
