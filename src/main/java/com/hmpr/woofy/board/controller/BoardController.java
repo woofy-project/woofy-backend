@@ -45,7 +45,7 @@ public class BoardController {
     public ResponseEntity<CommonApiResponse> deleteBoard(@PathVariable Long boardId) {
         try {
             boardService.deleteBoard(boardId);
-            return ResponseEntity.ok(CommonApiResponse.createSuccess("게시판이 성공적으로 삭제되었습니다."));
+            return ResponseEntity.ok(CommonApiResponse.createSuccessWithNoContent("게시판 삭제 성공"));
         } catch (BoardNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(CommonApiResponse.createError("게시판을 찾을 수 없습니다."));
         } catch (Exception ex) {
