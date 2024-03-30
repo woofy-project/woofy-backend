@@ -82,7 +82,6 @@ public class BoardServiceImpl implements BoardService {
         String contactEmail = requestDto.getContactEmail();
         Long categoryId = requestDto.getCategoryId();
         LocalDate meetingDate = requestDto.getMeetingDate();
-        // todo: 이미지 등록에 대한 처리 추가
 
         Board newBoard = Board.builder()
                 .userId(userId)
@@ -91,7 +90,6 @@ public class BoardServiceImpl implements BoardService {
                 .meetingDate(meetingDate)
                 .contactEmail(contactEmail)
                 .locationId(saveLocation(requestDto.getLocationRequestDto()))
-                // todo: 이미지 등록에 대한 처리 추가
                 .build();
         boardRepository.save(newBoard);
     }
