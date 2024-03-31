@@ -45,6 +45,9 @@ public class Board {
     @Column(name = "contact_email")
     private String contactEmail;
 
+    @Column(name = "content")
+    private String content;
+
     @Column(name = "image_id")
     private Long imageId;
 

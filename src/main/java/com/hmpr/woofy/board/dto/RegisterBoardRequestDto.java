@@ -20,6 +20,8 @@ public class RegisterBoardRequestDto {
 
     private String contactEmail;
 
+    private String content;
+
     @JsonProperty("location")
     private LocationRequestDto locationRequestDto;
 

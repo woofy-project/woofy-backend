@@ -71,6 +71,7 @@ public class BoardServiceImpl implements BoardService {
                 .registrationDate(board.getRegistrationDate())
                 .meetingDate(board.getMeetingDate())
                 .contactEmail(board.getContactEmail())
+                .content(board.getContent())
                 .build();
     }
 
@@ -82,6 +83,7 @@ public class BoardServiceImpl implements BoardService {
         String contactEmail = requestDto.getContactEmail();
         Long categoryId = requestDto.getCategoryId();
         LocalDate meetingDate = requestDto.getMeetingDate();
+        String content = requestDto.getContent();
 
         Board newBoard = Board.builder()
                 .userId(userId)
@@ -89,6 +91,7 @@ public class BoardServiceImpl implements BoardService {
                 .categoryId(categoryId)
                 .meetingDate(meetingDate)
                 .contactEmail(contactEmail)
+                .content(content)
                 .locationId(saveLocation(requestDto.getLocationRequestDto()))
                 .build();
         boardRepository.save(newBoard);

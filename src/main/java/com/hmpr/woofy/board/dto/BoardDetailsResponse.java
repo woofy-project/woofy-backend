@@ -31,6 +31,8 @@ public class BoardDetailsResponse {
 
     private String contactEmail;
 
+    private String content;
+
     private String imageUrl;
 
     private List<Comment> commentList;
