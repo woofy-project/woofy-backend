@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class LocationResponseDto {
+public class LocationResponse {
 
     private String streetAddress;
 

@@ -54,7 +54,7 @@ public class BoardServiceImpl implements BoardService {
         Board board = result.get(QBoard.board);
         String nickname = result.get(QUser.user.nickname);
         String categoryName = result.get(QCategory.category.categoryName);
-        LocationResponseDto locationResponseDto = LocationResponseDto.builder()
+        LocationResponse locationResponse = LocationResponse.builder()
                 .streetAddress(result.get(QLocation.location.streetAddress))
                 .detail(result.get(QLocation.location.detail))
                 .build();
@@ -64,7 +64,7 @@ public class BoardServiceImpl implements BoardService {
                 .title(board.getTitle())
                 .nickName(nickname)
                 .categoryName(categoryName)
-                .location(locationResponseDto)
+                .location(locationResponse)
                 .registrationDate(board.getRegistrationDate())
                 .meetingDate(board.getMeetingDate())
                 .contactEmail(board.getContactEmail())
@@ -73,7 +73,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void registerBoard(RegisterBoardRequestDto requestDto){
+    public void registerBoard(RegisterBoardRequest requestDto){
 
         Long userId = requestDto.getUserId();
         String title = requestDto.getTitle();
@@ -89,15 +89,15 @@ public class BoardServiceImpl implements BoardService {
                 .meetingDate(meetingDate)
                 .contactEmail(contactEmail)
                 .content(content)
-                .locationId(saveLocation(requestDto.getLocationRequestDto()))
+                .locationId(saveLocation(requestDto.getLocationRequest()))
                 .build();
         boardRepository.save(newBoard);
     }
 
-    private Long saveLocation(LocationRequestDto locationRequestDto){
+    private Long saveLocation(LocationRequest locationRequest){
         Location location = Location.builder()
-                .streetAddress(locationRequestDto.getStreetAddress())
-                .detail(locationRequestDto.getDetail())
+                .streetAddress(locationRequest.getStreetAddress())
+                .detail(locationRequest.getDetail())
                 .build();
 
         Location savedLocation = locationRepository.save(location);
@@ -106,7 +106,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void updateBoard(Long boardId, UpdateBoardRequestDto requestDto) {
+    public void updateBoard(Long boardId, UpdateBoardRequest requestDto) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BoardNotFoundException("게시판을 찾을 수 없습니다. ID: " + boardId));
 

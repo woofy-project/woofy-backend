@@ -1,8 +1,8 @@
 package com.hmpr.woofy.board.controller;
 
 import com.hmpr.woofy.board.dto.BoardDetailsResponse;
-import com.hmpr.woofy.board.dto.RegisterBoardRequestDto;
-import com.hmpr.woofy.board.dto.UpdateBoardRequestDto;
+import com.hmpr.woofy.board.dto.RegisterBoardRequest;
+import com.hmpr.woofy.board.dto.UpdateBoardRequest;
 import com.hmpr.woofy.board.service.BoardService;
 import com.hmpr.woofy.common.dto.CommonApiResponse;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,7 @@ public class BoardController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<CommonApiResponse> registerBoard(@RequestBody RegisterBoardRequestDto requestDto) {
+    public ResponseEntity<CommonApiResponse> registerBoard(@RequestBody RegisterBoardRequest requestDto) {
         try {
             boardService.registerBoard(requestDto);
             return ResponseEntity.ok(CommonApiResponse.createSuccessWithNoContent("게시판 등록 성공"));
@@ -37,7 +37,7 @@ public class BoardController {
     }
 
     @PutMapping("/{boardId}")
-    public ResponseEntity<CommonApiResponse> updateBoard(@PathVariable Long boardId, @RequestBody UpdateBoardRequestDto requestDto) {
+    public ResponseEntity<CommonApiResponse> updateBoard(@PathVariable Long boardId, @RequestBody UpdateBoardRequest requestDto) {
         boardService.updateBoard(boardId, requestDto);
         return ResponseEntity.ok(CommonApiResponse.createSuccessWithNoContent("게시판 수정 성공"));
     }

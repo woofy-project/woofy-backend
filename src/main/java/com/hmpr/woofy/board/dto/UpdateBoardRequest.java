@@ -8,9 +8,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class RegisterBoardRequestDto {
-
-    private Long userId;
+public class UpdateBoardRequest {
 
     private String title;
 
@@ -23,6 +21,6 @@ public class RegisterBoardRequestDto {
     private String content;
 
     @JsonProperty("location")
-    private LocationRequestDto locationRequestDto;
+    private LocationRequest locationRequest;
 
 }

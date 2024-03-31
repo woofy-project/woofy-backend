@@ -1,7 +1,6 @@
 package com.hmpr.woofy.board.dto;
 
 import com.hmpr.woofy.board.entity.Comment;
-import com.hmpr.woofy.board.entity.Location;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +22,7 @@ public class BoardDetailsResponse {
 
     private String categoryName;
 
-    private LocationResponseDto location;
+    private LocationResponse location;
 
     private LocalDateTime registrationDate;
 
