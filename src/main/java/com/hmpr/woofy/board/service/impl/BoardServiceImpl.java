@@ -1,9 +1,6 @@
 package com.hmpr.woofy.board.service.impl;
 
-import com.hmpr.woofy.board.dto.BoardDetailsResponse;
-import com.hmpr.woofy.board.dto.LocationRequestDto;
-import com.hmpr.woofy.board.dto.LocationResponseDto;
-import com.hmpr.woofy.board.dto.RegisterBoardRequestDto;
+import com.hmpr.woofy.board.dto.*;
 import com.hmpr.woofy.board.entity.*;
 import com.hmpr.woofy.board.exception.BoardNotFoundException;
 import com.hmpr.woofy.board.repository.BoardRepository;
@@ -106,6 +103,20 @@ public class BoardServiceImpl implements BoardService {
         Location savedLocation = locationRepository.save(location);
 
         return savedLocation.getLocationId();
+    }
+
+    @Override
+    public void updateBoard(Long boardId, UpdateBoardRequestDto requestDto) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new BoardNotFoundException("게시판을 찾을 수 없습니다. ID: " + boardId));
+
+        board.setTitle(requestDto.getTitle());
+        board.setCategoryId(requestDto.getCategoryId());
+        board.setMeetingDate(requestDto.getMeetingDate());
+        board.setContactEmail(requestDto.getContactEmail());
+        board.setContent(requestDto.getContent());
+
+        boardRepository.save(board);
     }
 
     @Override

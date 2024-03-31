@@ -3,7 +3,6 @@ package com.hmpr.woofy.board.controller;
 import com.hmpr.woofy.board.dto.BoardDetailsResponse;
 import com.hmpr.woofy.board.dto.RegisterBoardRequestDto;
 import com.hmpr.woofy.board.dto.UpdateBoardRequestDto;
-import com.hmpr.woofy.board.exception.BoardNotFoundException;
 import com.hmpr.woofy.board.service.BoardService;
 import com.hmpr.woofy.common.dto.CommonApiResponse;
 import org.springframework.http.HttpStatus;
@@ -35,6 +34,12 @@ public class BoardController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(CommonApiResponse.createError("게시판 등록 오류"));
         }
+    }
+
+    @PutMapping("/{boardId}")
+    public ResponseEntity<CommonApiResponse> updateBoard(@PathVariable Long boardId, @RequestBody UpdateBoardRequestDto requestDto) {
+        boardService.updateBoard(boardId, requestDto);
+        return ResponseEntity.ok(CommonApiResponse.createSuccessWithNoContent("게시판 수정 성공"));
     }
 
     @DeleteMapping("/{boardId}")
