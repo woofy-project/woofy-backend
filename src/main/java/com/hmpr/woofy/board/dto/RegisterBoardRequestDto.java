@@ -10,18 +10,17 @@ import java.time.LocalDate;
 @Setter
 public class RegisterBoardRequestDto {
 
-    Long userId;
+    private Long userId;
 
-    String title;
+    private String title;
 
-    Long categoryId;
+    private Long categoryId;
 
-    LocalDate meetingDate;
+    private LocalDate meetingDate;
 
-    String contactEmail;
+    private String contactEmail;
 
     @JsonProperty("location")
-    LocationRequestDto locationRequestDto;
+    private LocationRequestDto locationRequestDto;
 
-    //todo 이미지 등록
 }

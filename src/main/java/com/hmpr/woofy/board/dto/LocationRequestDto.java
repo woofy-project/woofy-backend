@@ -9,7 +9,7 @@ import lombok.Setter;
 @Builder
 public class LocationRequestDto {
 
-    String streetAddress;
+    private String streetAddress;
 
-    String detail;
+    private String detail;
 }
