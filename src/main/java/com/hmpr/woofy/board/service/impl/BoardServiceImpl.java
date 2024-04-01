@@ -9,6 +9,9 @@ import com.hmpr.woofy.board.service.BoardService;
 import com.hmpr.woofy.user.entity.QUser;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,6 +27,21 @@ public class BoardServiceImpl implements BoardService {
         this.queryFactory = queryFactory;
         this.boardRepository = boardRepository;
         this.locationRepository = locationRepository;
+    }
+
+    @Override
+    public Page<BoardListResponse> getBoardList(BoardListRequest requestDto) {
+        Pageable pageable = PageRequest.of(requestDto.getPage(), requestDto.getSize());
+        Page<Board> boardPage = boardRepository.findAll(pageable);
+        return boardPage.map(this::mapToBoardListResponse);
+    }
+
+    private BoardListResponse mapToBoardListResponse(Board board) {
+        return BoardListResponse.builder()
+                .boardId(board.getBoardId())
+                .title(board.getTitle())
+                .nickname(board.getUser().getNickname())
+                .build();
     }
 
     @Override

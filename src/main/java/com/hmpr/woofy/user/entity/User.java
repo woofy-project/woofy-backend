@@ -1,6 +1,5 @@
 package com.hmpr.woofy.user.entity;
 
-import com.hmpr.woofy.auth.entity.KakaoAuth;
 import jakarta.persistence.*;
 import lombok.*;
 

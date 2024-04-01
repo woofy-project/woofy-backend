@@ -1,5 +1,6 @@
 package com.hmpr.woofy.board.entity;
 
+import com.hmpr.woofy.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -48,4 +49,7 @@ public class Board {
     @Column(name = "image_id")
     private Long imageId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

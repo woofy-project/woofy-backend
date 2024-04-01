@@ -1,10 +1,11 @@
 package com.hmpr.woofy.board.service;
 
-import com.hmpr.woofy.board.dto.BoardDetailsResponse;
-import com.hmpr.woofy.board.dto.RegisterBoardRequest;
-import com.hmpr.woofy.board.dto.UpdateBoardRequest;
+import com.hmpr.woofy.board.dto.*;
+import org.springframework.data.domain.Page;
 
 public interface BoardService {
+
+    Page<BoardListResponse> getBoardList(BoardListRequest requestDto);
 
     BoardDetailsResponse getBoardDetails(Long boardId);
 
