@@ -4,7 +4,6 @@ import com.hmpr.woofy.board.dto.*;
 import com.hmpr.woofy.board.service.BoardService;
 import com.hmpr.woofy.common.dto.CommonApiResponse;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -21,7 +21,7 @@ public class Board {
     @Column(name = "board_id")
     private Long boardId;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", insertable = false, updatable = false)
     private Long userId;
 
     @Column(name = "category_id")
