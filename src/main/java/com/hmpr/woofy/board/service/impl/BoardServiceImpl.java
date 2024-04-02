@@ -1,5 +1,6 @@
 package com.hmpr.woofy.board.service.impl;
 
+import com.hmpr.woofy.Like.repository.LikeRepository;
 import com.hmpr.woofy.board.dto.*;
 import com.hmpr.woofy.board.entity.*;
 import com.hmpr.woofy.board.exception.BoardNotFoundException;
@@ -22,11 +23,13 @@ public class BoardServiceImpl implements BoardService {
     private final JPAQueryFactory queryFactory;
     private final BoardRepository boardRepository;
     private final LocationRepository locationRepository;
+    private final LikeRepository likeRepository;
 
-    public BoardServiceImpl(JPAQueryFactory queryFactory, BoardRepository boardRepository, LocationRepository locationRepository) {
+    public BoardServiceImpl(JPAQueryFactory queryFactory, BoardRepository boardRepository, LocationRepository locationRepository, LikeRepository likeRepository) {
         this.queryFactory = queryFactory;
         this.boardRepository = boardRepository;
         this.locationRepository = locationRepository;
+        this.likeRepository = likeRepository;
     }
 
     @Override
@@ -87,6 +90,7 @@ public class BoardServiceImpl implements BoardService {
                 .meetingDate(board.getMeetingDate())
                 .contactEmail(board.getContactEmail())
                 .content(board.getContent())
+                .likeCount(countLikeOfBoard(boardId))
                 .build();
     }
 
@@ -142,5 +146,9 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BoardNotFoundException("게시판을 찾을 수 없습니다. ID: " + boardId));
         boardRepository.delete(board);
+    }
+
+    private long countLikeOfBoard(Long boardId) {
+        return likeRepository.countByBoardId(boardId);
     }
 }

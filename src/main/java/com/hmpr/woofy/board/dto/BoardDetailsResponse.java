@@ -34,5 +34,7 @@ public class BoardDetailsResponse {
 
     private String imageUrl;
 
+    private Long likeCount;
+
     private List<Comment> commentList;
 }
