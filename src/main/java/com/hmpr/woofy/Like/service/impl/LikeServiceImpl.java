@@ -28,6 +28,11 @@ public class LikeServiceImpl implements LikeService {
         this.likeRepository = likeRepository;
     }
 
+    /**
+     * 공고에 좋아요 등록
+     *
+     * @param requestDto 공고id, 사용자id
+     */
     @Transactional
     @Override
     public void insertLike(LikeRequest requestDto) {
@@ -39,6 +44,11 @@ public class LikeServiceImpl implements LikeService {
         saveLike(user, board);
     }
 
+    /**
+     * 공고에 좋아요 삭제
+     *
+     * @param requestDto 공고id, 사용자id
+     */
     @Transactional
     @Override
     public void delete(LikeRequest requestDto) {
