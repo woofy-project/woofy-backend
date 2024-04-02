@@ -52,4 +52,7 @@ public class Board {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(name= "like_count")
+    Long likeCount;
 }

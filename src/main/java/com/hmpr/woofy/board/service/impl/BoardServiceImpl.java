@@ -143,5 +143,4 @@ public class BoardServiceImpl implements BoardService {
                 .orElseThrow(() -> new BoardNotFoundException("게시판을 찾을 수 없습니다. ID: " + boardId));
         boardRepository.delete(board);
     }
-
 }
