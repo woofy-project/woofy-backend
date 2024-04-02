@@ -32,6 +32,12 @@ public class BoardServiceImpl implements BoardService {
         this.likeRepository = likeRepository;
     }
 
+    /**
+     * 카테고리별, 지정된 페이지 번호로 페이징된 공고 리스트를 가져옴
+     *
+     * @param requestDto 카테고리Id,페이지번호,페이지 크기
+     * @return 페이징된 리스트
+     */
     @Override
     public Page<BoardListResponse> getBoardList(BoardListRequest requestDto) {
         Pageable pageable = PageRequest.of(requestDto.getPage(), requestDto.getSize());
@@ -47,6 +53,13 @@ public class BoardServiceImpl implements BoardService {
                 .build();
     }
 
+    /**
+     * 공고 상세 정보를 가져옴
+     *
+     * @param boardId 게시판 ID
+     * @return 게시판 상세 정보
+     * @throws BoardNotFoundException 해당 ID의 게시판이 없을 때 발생
+     */
     @Override
     public BoardDetailsResponse getBoardDetails(Long boardId) {
         Board board = boardRepository.findById(boardId)
@@ -94,6 +107,11 @@ public class BoardServiceImpl implements BoardService {
                 .build();
     }
 
+    /**
+     * 공고 등록 처리
+     *
+     * @param requestDto 등록할 게시판 정보
+     */
     @Override
     public void registerBoard(RegisterBoardRequest requestDto){
 
@@ -127,6 +145,13 @@ public class BoardServiceImpl implements BoardService {
         return savedLocation.getLocationId();
     }
 
+    /**
+     * 공고 정보 수정 처리
+     *
+     * @param boardId    수정할 게시판 ID
+     * @param requestDto 수정할 게시판 정보
+     * @throws BoardNotFoundException 해당 ID의 게시판이 없을 때 발생
+     */
     @Override
     public void updateBoard(Long boardId, UpdateBoardRequest requestDto) {
         Board board = boardRepository.findById(boardId)
@@ -141,6 +166,12 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.save(board);
     }
 
+    /**
+     * 공고 삭제 처리
+     *
+     * @param boardId 삭제할 게시판 ID
+     * @throws BoardNotFoundException 해당 ID의 게시판이 없을 때 발생
+     */
     @Override
     public void deleteBoard(Long boardId) {
         Board board = boardRepository.findById(boardId)
@@ -148,6 +179,12 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.delete(board);
     }
 
+    /**
+     * 공고에 등록된 좋아요 수를 가져옴
+     *
+     * @param boardId 게시판 ID
+     * @return 해당 게시판의 좋아요 수
+     */
     private long countLikeOfBoard(Long boardId) {
         return likeRepository.countByBoardId(boardId);
     }
