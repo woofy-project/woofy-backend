@@ -19,6 +19,6 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<CommonApiResponse> registerUser(@RequestParam RegisterUserRequest registerUserRequest) {
             userService.registerUser(registerUserRequest);
-            return ResponseEntity.ok(CommonApiResponse.createSuccessWithNoContent());
+            return ResponseEntity.ok(CommonApiResponse.createSuccessWithNoContent("가입 성공"));
     }
 }
