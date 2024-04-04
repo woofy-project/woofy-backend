@@ -7,6 +7,8 @@ import com.hmpr.woofy.board.exception.BoardNotFoundException;
 import com.hmpr.woofy.board.repository.BoardRepository;
 import com.hmpr.woofy.board.repository.LocationRepository;
 import com.hmpr.woofy.board.service.BoardService;
+import com.hmpr.woofy.comment.dto.CommentResponse;
+import com.hmpr.woofy.comment.service.CommentService;
 import com.hmpr.woofy.user.entity.QUser;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class BoardServiceImpl implements BoardService {
@@ -24,12 +27,14 @@ public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
     private final LocationRepository locationRepository;
     private final LikeRepository likeRepository;
+    private final CommentService commentService;
 
-    public BoardServiceImpl(JPAQueryFactory queryFactory, BoardRepository boardRepository, LocationRepository locationRepository, LikeRepository likeRepository) {
+    public BoardServiceImpl(JPAQueryFactory queryFactory, BoardRepository boardRepository, LocationRepository locationRepository, LikeRepository likeRepository, CommentService commentService) {
         this.queryFactory = queryFactory;
         this.boardRepository = boardRepository;
         this.locationRepository = locationRepository;
         this.likeRepository = likeRepository;
+        this.commentService = commentService;
     }
 
     /**
@@ -56,9 +61,9 @@ public class BoardServiceImpl implements BoardService {
     /**
      * 공고 상세 정보를 가져옴
      *
-     * @param boardId 게시판 ID
-     * @return 게시판 상세 정보
-     * @throws BoardNotFoundException 해당 ID의 게시판이 없을 때 발생
+     * @param boardId 공고 ID
+     * @return 공고 상세 정보
+     * @throws BoardNotFoundException 해당 ID의 공고가 없을 때 발생
      */
     @Override
     public BoardDetailsResponse getBoardDetails(Long boardId) {
@@ -69,6 +74,7 @@ public class BoardServiceImpl implements BoardService {
         QUser qUser = QUser.user;
         QCategory qCategory = QCategory.category;
         QLocation qLocation = QLocation.location;
+
 
         Tuple result = queryFactory
                 .select(qBoard, qUser.nickname, qCategory.categoryName)
@@ -88,6 +94,7 @@ public class BoardServiceImpl implements BoardService {
         Board board = result.get(QBoard.board);
         String nickname = result.get(QUser.user.nickname);
         String categoryName = result.get(QCategory.category.categoryName);
+        List<CommentResponse> comments = commentService.getCommentsByBoard(board);
         LocationResponse locationResponse = LocationResponse.builder()
                 .streetAddress(result.get(QLocation.location.streetAddress))
                 .detail(result.get(QLocation.location.detail))
@@ -104,16 +111,17 @@ public class BoardServiceImpl implements BoardService {
                 .contactEmail(board.getContactEmail())
                 .content(board.getContent())
                 .likeCount(countLikeOfBoard(boardId))
+                .commentList(comments)
                 .build();
     }
 
     /**
      * 공고 등록 처리
      *
-     * @param requestDto 등록할 게시판 정보
+     * @param requestDto 등록할 공고 정보
      */
     @Override
-    public void registerBoard(RegisterBoardRequest requestDto){
+    public void registerBoard(RegisterBoardRequest requestDto) {
 
         Long userId = requestDto.getUserId();
         String title = requestDto.getTitle();
@@ -134,7 +142,7 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.save(newBoard);
     }
 
-    private Long saveLocation(LocationRequest locationRequest){
+    private Long saveLocation(LocationRequest locationRequest) {
         Location location = Location.builder()
                 .streetAddress(locationRequest.getStreetAddress())
                 .detail(locationRequest.getDetail())
@@ -148,9 +156,9 @@ public class BoardServiceImpl implements BoardService {
     /**
      * 공고 정보 수정 처리
      *
-     * @param boardId    수정할 게시판 ID
-     * @param requestDto 수정할 게시판 정보
-     * @throws BoardNotFoundException 해당 ID의 게시판이 없을 때 발생
+     * @param boardId    수정할 공고 ID
+     * @param requestDto 수정할 공고 정보
+     * @throws BoardNotFoundException 해당 ID의 공고가 없을 때 발생
      */
     @Override
     public void updateBoard(Long boardId, UpdateBoardRequest requestDto) {
@@ -169,8 +177,8 @@ public class BoardServiceImpl implements BoardService {
     /**
      * 공고 삭제 처리
      *
-     * @param boardId 삭제할 게시판 ID
-     * @throws BoardNotFoundException 해당 ID의 게시판이 없을 때 발생
+     * @param boardId 삭제할 공고 ID
+     * @throws BoardNotFoundException 해당 ID의 공고가 없을 때 발생
      */
     @Override
     public void deleteBoard(Long boardId) {
@@ -182,10 +190,23 @@ public class BoardServiceImpl implements BoardService {
     /**
      * 공고에 등록된 좋아요 수를 가져옴
      *
-     * @param boardId 게시판 ID
-     * @return 해당 게시판의 좋아요 수
+     * @param boardId 공고 ID
+     * @return 해당 공고의 좋아요 수
      */
     private long countLikeOfBoard(Long boardId) {
         return likeRepository.countByBoardId(boardId);
+    }
+
+    /**
+     * 공고아이디값으로 공고 객체를 가져옴
+     *
+     * @param boardId 공고 ID
+     * @return 공고 객체
+     */
+    @Override
+    public Board getBoardById(Long boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new BoardNotFoundException("게시판을 찾을 수 없습니다. ID: " + boardId));
+        return board;
     }
 }

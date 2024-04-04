@@ -2,6 +2,7 @@ package com.hmpr.woofy.user.service.impl;
 
 import com.hmpr.woofy.user.dto.RegisterUserRequest;
 import com.hmpr.woofy.user.entity.User;
+import com.hmpr.woofy.user.exception.UserNotFoundException;
 import com.hmpr.woofy.user.repository.UserRepository;
 import com.hmpr.woofy.user.service.UserService;
 import org.springframework.stereotype.Service;
@@ -32,5 +33,18 @@ public class UserServiceImpl implements UserService {
                 .woofyAge(registerUserRequest.getWoofyAge())
                 .build();
         userRepository.save(existingUser);
+    }
+
+    /**
+     * 유저 아이디로 유저 객체가져옴
+     *
+     * @param userId 유저 아이디
+     * @return 유저객체
+     */
+    @Override
+    public User getUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않은 유저 아이디 :" + userId));
+        return user;
     }
 }

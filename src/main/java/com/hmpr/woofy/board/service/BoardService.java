@@ -1,6 +1,7 @@
 package com.hmpr.woofy.board.service;
 
 import com.hmpr.woofy.board.dto.*;
+import com.hmpr.woofy.board.entity.Board;
 import org.springframework.data.domain.Page;
 
 public interface BoardService {
@@ -15,4 +16,5 @@ public interface BoardService {
 
     void updateBoard(Long boardId, UpdateBoardRequest requestDto);
 
+    Board getBoardById(Long boardId);
 }
