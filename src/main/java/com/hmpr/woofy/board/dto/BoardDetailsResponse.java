@@ -1,6 +1,6 @@
 package com.hmpr.woofy.board.dto;
 
-import com.hmpr.woofy.board.entity.Comment;
+import com.hmpr.woofy.comment.entity.Comment;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
