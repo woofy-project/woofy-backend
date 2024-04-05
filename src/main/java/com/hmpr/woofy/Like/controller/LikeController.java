@@ -16,13 +16,13 @@ public class LikeController {
         this.likeService = likeService;
     }
 
-    @PostMapping
+    @PostMapping("/insert")
     public ResponseEntity<CommonApiResponse> insertLike(@RequestBody LikeRequest requestDto){
         likeService.insertLike(requestDto);
         return ResponseEntity.ok(CommonApiResponse.createSuccessWithNoContent("좋아요 등록 성공"));
     }
 
-    @PostMapping
+    @PostMapping("/delete")
     public ResponseEntity<CommonApiResponse> deleteLike(@RequestBody LikeRequest requestDto){
         likeService.delete(requestDto);
         return ResponseEntity.ok(CommonApiResponse.createSuccessWithNoContent("좋아요 삭제 성공"));
