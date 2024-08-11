@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 public class BoardServiceImpl implements BoardService {
@@ -27,14 +26,12 @@ public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
     private final LocationRepository locationRepository;
     private final LikeRepository likeRepository;
-    private final CommentService commentService;
 
-    public BoardServiceImpl(JPAQueryFactory queryFactory, BoardRepository boardRepository, LocationRepository locationRepository, LikeRepository likeRepository, CommentService commentService) {
+    public BoardServiceImpl(JPAQueryFactory queryFactory, BoardRepository boardRepository, LocationRepository locationRepository, LikeRepository likeRepository) {
         this.queryFactory = queryFactory;
         this.boardRepository = boardRepository;
         this.locationRepository = locationRepository;
         this.likeRepository = likeRepository;
-        this.commentService = commentService;
     }
 
     /**
@@ -94,7 +91,7 @@ public class BoardServiceImpl implements BoardService {
         Board board = result.get(QBoard.board);
         String nickname = result.get(QUser.user.nickname);
         String categoryName = result.get(QCategory.category.categoryName);
-        List<CommentResponse> comments = commentService.getCommentsByBoard(board);
+        //List<CommentResponse> comments = commentService.getCommentsByBoard(board);
         LocationResponse locationResponse = LocationResponse.builder()
                 .streetAddress(result.get(QLocation.location.streetAddress))
                 .detail(result.get(QLocation.location.detail))
@@ -110,8 +107,8 @@ public class BoardServiceImpl implements BoardService {
                 .meetingDate(board.getMeetingDate())
                 .contactEmail(board.getContactEmail())
                 .content(board.getContent())
-                .likeCount(countLikeOfBoard(boardId))
-                .commentList(comments)
+                .likeCount(countLikeOfBoard(board))
+                //.commentList(comments)
                 .build();
     }
 
@@ -190,11 +187,11 @@ public class BoardServiceImpl implements BoardService {
     /**
      * 공고에 등록된 좋아요 수를 가져옴
      *
-     * @param boardId 공고 ID
+     * @param board 공고 ID
      * @return 해당 공고의 좋아요 수
      */
-    private long countLikeOfBoard(Long boardId) {
-        return likeRepository.countByBoardId(boardId);
+    private long countLikeOfBoard(Board board) {
+        return likeRepository.countByBoard(board);
     }
 
     /**

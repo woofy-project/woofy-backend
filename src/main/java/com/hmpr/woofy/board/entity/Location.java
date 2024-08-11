@@ -23,7 +23,7 @@ public class Location {
     private Board board;
 
     @OneToOne
-    @Column(name = "user_id")
+    @PrimaryKeyJoinColumn
     private User user;
 
     @Column(name = "street_address")

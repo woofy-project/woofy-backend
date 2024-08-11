@@ -3,16 +3,14 @@ package com.hmpr.woofy.comment.entity;
 import com.hmpr.woofy.board.entity.Board;
 import com.hmpr.woofy.user.entity.User;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Builder
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "comment")
 public class Comment {
 
